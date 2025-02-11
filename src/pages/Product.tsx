@@ -79,29 +79,40 @@ const Product = () => {
     queryKey: ['related-products', product?.id],
     enabled: !!product?.id,
     queryFn: async () => {
-      const { data: relatedData, error } = await supabase
-        .from('related_products')
-        .select(`
-          related_product:products!related_products_related_product_id_fkey(
-            id,
-            name,
-            slug,
-            price,
-            description,
-            categories:category_id(
-              name,
-              slug
-            ),
-            brands:brand_id(
-              name,
-              slug
-            )
-          )
-        `)
-        .eq('product_id', product.id);
+      try {
+        if (!product?.id) return [];
 
-      if (error) throw error;
-      return relatedData.map(item => item.related_product) as RelatedProduct[];
+        const { data, error } = await supabase
+          .from('related_products')
+          .select(`
+            products!related_products_related_product_id_fkey (
+              id,
+              name,
+              slug,
+              price,
+              description,
+              categories:category_id (
+                name,
+                slug
+              ),
+              brands:brand_id (
+                name,
+                slug
+              )
+            )
+          `)
+          .eq('product_id', product.id);
+
+        if (error) {
+          console.error('Error fetching related products:', error);
+          return [];
+        }
+
+        return data.map(item => item.products) as RelatedProduct[];
+      } catch (error) {
+        console.error('Error in related products query:', error);
+        return [];
+      }
     },
   });
 
