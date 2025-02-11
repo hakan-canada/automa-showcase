@@ -48,6 +48,12 @@ const Navbar = () => {
             <Link to="/brands" className="hover:text-primary transition-colors">
               Brands
             </Link>
+            <Link to="/contact" className="hover:text-primary transition-colors">
+              Contact
+            </Link>
+            <Link to="/quote" className="hover:text-primary transition-colors">
+              Get Quote
+            </Link>
           </div>
 
           <Button
@@ -91,6 +97,18 @@ const Navbar = () => {
                 className="hover:text-primary transition-colors py-2"
               >
                 Brands
+              </Link>
+              <Link
+                to="/contact"
+                className="hover:text-primary transition-colors py-2"
+              >
+                Contact
+              </Link>
+              <Link
+                to="/quote"
+                className="hover:text-primary transition-colors py-2"
+              >
+                Get Quote
               </Link>
             </div>
           </div>
