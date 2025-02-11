@@ -9,7 +9,111 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      brands: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          slug: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          slug: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          slug?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          brand_id: number | null
+          category_id: number | null
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          price: number | null
+          slug: string
+          specifications: Json | null
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: number | null
+          category_id?: number | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          price?: number | null
+          slug: string
+          specifications?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: number | null
+          category_id?: number | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          price?: number | null
+          slug?: string
+          specifications?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -8,6 +8,9 @@ import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import Quote from "./pages/Quote";
 import NotFound from "./pages/NotFound";
+import Product from "./pages/Product";
+import Category from "./pages/Category";
+import Brand from "./pages/Brand";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +31,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/quote" element={<Quote />} />
+          <Route path="/product/:slug" element={<Product />} />
+          <Route path="/category/:slug" element={<Category />} />
+          <Route path="/brand/:slug" element={<Brand />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
