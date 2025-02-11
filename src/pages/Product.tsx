@@ -7,6 +7,14 @@ import { Card } from '@/components/ui/card';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, FileText } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface RelatedProduct {
   id: number;
@@ -24,34 +32,55 @@ interface RelatedProduct {
   } | null;
 }
 
-const RelatedProductCard = ({ product }: { product: RelatedProduct }) => (
-  <Link to={`/product/${product.slug}`}>
-    <Card className="h-full hover:shadow-lg transition-shadow">
-      <div className="p-4">
-        <div className="aspect-square bg-muted rounded-md mb-4 flex items-center justify-center">
-          <img
-            src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-            alt={product.name}
-            className="max-w-full h-auto rounded-md"
-          />
-        </div>
-        <div>
-          <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
-          <div className="flex gap-2 mb-2">
+const RelatedProductsTable = ({ products }: { products: RelatedProduct[] }) => (
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead className="w-[100px]">Image</TableHead>
+        <TableHead>Product</TableHead>
+        <TableHead>Brand</TableHead>
+        <TableHead>Description</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {products.map((product) => (
+        <TableRow key={product.id}>
+          <TableCell>
+            <div className="w-[100px] h-[100px] bg-muted rounded-md flex items-center justify-center">
+              <img
+                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                alt={product.name}
+                className="max-w-full max-h-full object-cover rounded-md"
+              />
+            </div>
+          </TableCell>
+          <TableCell>
+            <Link 
+              to={`/product/${product.slug}`}
+              className="font-medium hover:underline"
+            >
+              {product.name}
+            </Link>
             {product.categories && (
-              <Badge variant="secondary" className="truncate">
+              <Badge variant="secondary" className="ml-2">
                 {product.categories.name}
               </Badge>
             )}
+          </TableCell>
+          <TableCell>
             {product.brands && (
-              <Badge className="truncate">{product.brands.name}</Badge>
+              <Badge>{product.brands.name}</Badge>
             )}
-          </div>
-          <p className="text-primary font-bold">${product.price}</p>
-        </div>
-      </div>
-    </Card>
-  </Link>
+          </TableCell>
+          <TableCell className="max-w-md">
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {product.description}
+            </p>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
 );
 
 const Product = () => {
@@ -186,14 +215,7 @@ const Product = () => {
         {relatedProducts && relatedProducts.length > 0 && (
           <section className="mt-12">
             <h2 className="text-2xl font-semibold mb-6">Related Products</h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct) => (
-                <RelatedProductCard 
-                  key={relatedProduct.id} 
-                  product={relatedProduct}
-                />
-              ))}
-            </div>
+            <RelatedProductsTable products={relatedProducts} />
           </section>
         )}
       </main>
