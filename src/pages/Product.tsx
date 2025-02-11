@@ -8,6 +8,52 @@ import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, FileText } from 'lucide-react';
 
+interface RelatedProduct {
+  id: number;
+  name: string;
+  slug: string;
+  price: number | null;
+  description: string | null;
+  categories: {
+    name: string;
+    slug: string;
+  } | null;
+  brands: {
+    name: string;
+    slug: string;
+  } | null;
+}
+
+const RelatedProductCard = ({ product }: { product: RelatedProduct }) => (
+  <Link to={`/product/${product.slug}`}>
+    <Card className="h-full hover:shadow-lg transition-shadow">
+      <div className="p-4">
+        <div className="aspect-square bg-muted rounded-md mb-4 flex items-center justify-center">
+          <img
+            src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+            alt={product.name}
+            className="max-w-full h-auto rounded-md"
+          />
+        </div>
+        <div>
+          <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
+          <div className="flex gap-2 mb-2">
+            {product.categories && (
+              <Badge variant="secondary" className="truncate">
+                {product.categories.name}
+              </Badge>
+            )}
+            {product.brands && (
+              <Badge className="truncate">{product.brands.name}</Badge>
+            )}
+          </div>
+          <p className="text-primary font-bold">${product.price}</p>
+        </div>
+      </div>
+    </Card>
+  </Link>
+);
+
 const Product = () => {
   const { slug } = useParams();
 
@@ -29,6 +75,31 @@ const Product = () => {
     },
   });
 
+  const { data: relatedProducts } = useQuery({
+    queryKey: ['related-products', product?.id],
+    enabled: !!product?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('related_products')
+        .select(`
+          related_product_id,
+          related_product:related_product_id(
+            id,
+            name,
+            slug,
+            price,
+            description,
+            categories:category_id(*),
+            brands:brand_id(*)
+          )
+        `)
+        .eq('product_id', product?.id);
+
+      if (error) throw error;
+      return data?.map(item => item.related_product) ?? [];
+    },
+  });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -41,7 +112,7 @@ const Product = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden mb-8">
           <div className="grid md:grid-cols-2 gap-8 p-6">
             <div className="flex items-center justify-center bg-muted rounded-lg p-4">
               <img
@@ -95,6 +166,20 @@ const Product = () => {
             </div>
           </div>
         </Card>
+
+        {relatedProducts && relatedProducts.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-2xl font-semibold mb-6">Related Products</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((relatedProduct) => (
+                <RelatedProductCard 
+                  key={relatedProduct.id} 
+                  product={relatedProduct}
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
