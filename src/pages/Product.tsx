@@ -79,24 +79,29 @@ const Product = () => {
     queryKey: ['related-products', product?.id],
     enabled: !!product?.id,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: relatedData, error } = await supabase
         .from('related_products')
         .select(`
-          related_product_id,
-          related_product:related_product_id(
+          related_product:products!related_products_related_product_id_fkey(
             id,
             name,
             slug,
             price,
             description,
-            categories:category_id(*),
-            brands:brand_id(*)
+            categories:category_id(
+              name,
+              slug
+            ),
+            brands:brand_id(
+              name,
+              slug
+            )
           )
         `)
-        .eq('product_id', product?.id);
+        .eq('product_id', product.id);
 
       if (error) throw error;
-      return data?.map(item => item.related_product) ?? [];
+      return relatedData.map(item => item.related_product) as RelatedProduct[];
     },
   });
 
