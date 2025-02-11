@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,9 +6,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { FileText, Clock } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 const Quote = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const [searchParams] = useSearchParams();
+  const productName = searchParams.get('product');
 
   const onSubmit = (data: any) => {
     // Form will be handled by Netlify
@@ -119,6 +121,7 @@ const Quote = () => {
                   {...register("products", { required: true })}
                   placeholder="Please list the products you need quotes for, including quantities and any specific requirements."
                   className={`min-h-[150px] ${errors.products ? "border-destructive" : ""}`}
+                  defaultValue={productName ? productName : ""}
                 />
                 {errors.products && (
                   <p className="text-sm text-destructive">Product details are required</p>
