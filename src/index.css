@@ -52,6 +52,7 @@ img {
 }
 
 /* Add smooth transitions */
-.transition-all {
-  @apply transition-all duration-300 ease-in-out;
+.custom-transition {
+  @apply duration-300 ease-in-out;
+  transition-property: all;
 }
