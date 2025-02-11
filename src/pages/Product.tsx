@@ -33,54 +33,57 @@ interface RelatedProduct {
 }
 
 const RelatedProductsTable = ({ products }: { products: RelatedProduct[] }) => (
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead className="w-[100px]">Image</TableHead>
-        <TableHead>Product</TableHead>
-        <TableHead>Brand</TableHead>
-        <TableHead>Description</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {products.map((product) => (
-        <TableRow key={product.id}>
-          <TableCell>
-            <div className="w-[100px] h-[100px] bg-muted rounded-md flex items-center justify-center">
-              <img
-                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-                alt={product.name}
-                className="max-w-full max-h-full object-cover rounded-md"
-              />
-            </div>
-          </TableCell>
-          <TableCell>
-            <Link 
-              to={`/product/${product.slug}`}
-              className="font-medium hover:underline"
-            >
-              {product.name}
-            </Link>
-            {product.categories && (
-              <Badge variant="secondary" className="ml-2">
-                {product.categories.name}
-              </Badge>
-            )}
-          </TableCell>
-          <TableCell>
-            {product.brands && (
-              <Badge>{product.brands.name}</Badge>
-            )}
-          </TableCell>
-          <TableCell className="max-w-md">
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {product.description}
-            </p>
-          </TableCell>
+  <div className="overflow-x-auto">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Image</TableHead>
+          <TableHead className="min-w-[200px]">Product Details</TableHead>
+          <TableHead className="hidden md:table-cell">Description</TableHead>
         </TableRow>
-      ))}
-    </TableBody>
-  </Table>
+      </TableHeader>
+      <TableBody>
+        {products.map((product) => (
+          <TableRow key={product.id}>
+            <TableCell>
+              <div className="w-[80px] h-[80px] bg-muted rounded-md flex items-center justify-center">
+                <img
+                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                  alt={product.name}
+                  className="max-w-full max-h-full object-cover rounded-md"
+                />
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className="space-y-2">
+                <Link 
+                  to={`/product/${product.slug}`}
+                  className="font-medium hover:underline block"
+                >
+                  {product.name}
+                </Link>
+                {product.brands && (
+                  <Badge variant="secondary" className="text-xs">
+                    {product.brands.name}
+                  </Badge>
+                )}
+                <div className="md:hidden">
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
+                    {product.description}
+                  </p>
+                </div>
+              </div>
+            </TableCell>
+            <TableCell className="hidden md:table-cell max-w-xl">
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {product.description}
+              </p>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </div>
 );
 
 const Product = () => {
