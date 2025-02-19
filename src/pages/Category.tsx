@@ -58,7 +58,6 @@ const Category = () => {
       <Navbar />
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-2">{category.name}</h1>
-        <p className="text-muted-foreground mb-8">{category.description}</p>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {productsData?.items.map((product) => (
@@ -68,7 +67,6 @@ const Category = () => {
                 {product.brands && (
                   <p className="text-sm text-muted-foreground mb-2">{product.brands.name}</p>
                 )}
-                <p className="font-bold">${product.price}</p>
               </Card>
             </Link>
           ))}

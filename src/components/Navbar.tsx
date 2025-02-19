@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Menu, X } from 'lucide-react';
@@ -97,11 +96,6 @@ const Navbar = () => {
                             className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
                             <div className="text-sm font-medium leading-none">{category.name}</div>
-                            {category.description && (
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                {category.description}
-                              </p>
-                            )}
                           </Link>
                         </NavigationMenuLink>
                       ))}

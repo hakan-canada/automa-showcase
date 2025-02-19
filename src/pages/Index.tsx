@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -134,9 +133,6 @@ const Index = () => {
                   <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
                     {category.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {category.description}
-                  </p>
                 </Card>
               </Link>
             ))}

@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -84,7 +83,6 @@ const Brand = () => {
                 {product.categories && (
                   <p className="text-sm text-muted-foreground mb-2">{product.categories.name}</p>
                 )}
-                <p className="font-bold">${product.price}</p>
               </Card>
             </Link>
           ))}
