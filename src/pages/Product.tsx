@@ -175,7 +175,7 @@ const Product = () => {
               <div className="flex-grow">
                 <div className="flex items-center gap-2 mb-4">
                   <h1 className="text-3xl font-bold">{product.name}</h1>
-                  <Badge variant="success" className="bg-green-500">In Stock</Badge>
+                  <Badge variant="secondary" className="bg-green-500 text-white">In Stock</Badge>
                 </div>
                 <div className="flex gap-2 mb-4">
                   {product.categories && (
