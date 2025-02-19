@@ -77,20 +77,22 @@ const Navbar = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Brands</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                      {brands?.map((brand) => (
-                        <NavigationMenuLink
-                          key={brand.id}
-                          asChild
-                        >
-                          <Link
-                            to={`/brand/${brand.slug}`}
-                            className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    <div className="w-[300px] p-4">
+                      <div className="flex flex-col space-y-2">
+                        {brands?.map((brand) => (
+                          <NavigationMenuLink
+                            key={brand.id}
+                            asChild
                           >
-                            <div className="text-sm font-medium leading-none">{brand.name}</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      ))}
+                            <Link
+                              to={`/brand/${brand.slug}`}
+                              className="block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              {brand.name}
+                            </Link>
+                          </NavigationMenuLink>
+                        ))}
+                      </div>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>

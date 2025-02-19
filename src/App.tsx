@@ -11,12 +11,14 @@ import NotFound from "./pages/NotFound";
 import Product from "./pages/Product";
 import Category from "./pages/Category";
 import Brand from "./pages/Brand";
+import Categories from "./pages/Categories";
+import Search from "./pages/Search";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes (formerly cacheTime)
+      gcTime: 1000 * 60 * 30, // 30 minutes
     },
   },
 });
@@ -33,7 +35,9 @@ const App = () => (
           <Route path="/quote" element={<Quote />} />
           <Route path="/product/:slug" element={<Product />} />
           <Route path="/category/:slug" element={<Category />} />
+          <Route path="/categories" element={<Categories />} />
           <Route path="/brand/:slug" element={<Brand />} />
+          <Route path="/search" element={<Search />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

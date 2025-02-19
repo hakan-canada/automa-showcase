@@ -80,6 +80,34 @@ const Index = () => {
     },
   });
 
+  const topBrandLogos = [
+    { 
+      name: 'Rittal',
+      logo: 'https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//rittal-logo.png',
+      slug: 'rittal'
+    },
+    {
+      name: 'Phoenix Contact',
+      logo: 'https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//Phoenix_Contact.png',
+      slug: 'phoenix-contact'
+    },
+    {
+      name: 'ABB',
+      logo: 'https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//ABB_logo.png',
+      slug: 'abb'
+    },
+    {
+      name: 'SMC',
+      logo: 'https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//SMC-Canada-Elite-distributor.png',
+      slug: 'smc'
+    },
+    {
+      name: 'Omron',
+      logo: 'https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//OMRON_Logo.png',
+      slug: 'omron'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -97,7 +125,7 @@ const Index = () => {
         <section className="mb-16 animate-fade-up">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-semibold">Featured Products</h2>
-            <Link to="/category/controllers" className="text-primary flex items-center hover:underline">
+            <Link to="/categories" className="text-primary flex items-center hover:underline">
               View all <ChevronRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
@@ -117,6 +145,32 @@ const Index = () => {
 
         <section className="mb-16 animate-fade-up">
           <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-semibold">Top Brands</h2>
+            <Link to="/brands" className="text-primary flex items-center hover:underline">
+              View all <ChevronRight className="h-4 w-4 ml-1" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {topBrandLogos.map((brand) => (
+              <Link
+                key={brand.name}
+                to={`/brand/${brand.slug}`}
+                className="group"
+              >
+                <Card className="p-6 hover:shadow-lg transition-shadow flex items-center justify-center h-32">
+                  <img
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all"
+                  />
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-16 animate-fade-up">
+          <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-semibold">Browse by Category</h2>
             <Link to="/categories" className="text-primary flex items-center hover:underline">
               View all <ChevronRight className="h-4 w-4 ml-1" />
@@ -130,7 +184,7 @@ const Index = () => {
                 className="group"
               >
                 <Card className="p-6 hover:shadow-lg transition-shadow group-hover:border-primary">
-                  <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="font-semibold group-hover:text-primary transition-colors">
                     {category.name}
                   </h3>
                 </Card>
@@ -139,33 +193,14 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="grid md:grid-cols-2 gap-8 mb-16 animate-fade-up">
-          <div className="bg-primary/5 rounded-lg p-8">
-            <h2 className="text-2xl font-semibold mb-4">Request a Quote</h2>
-            <p className="text-muted-foreground mb-4">
-              Get personalized quotes for your automation needs
-            </p>
-            <Link to="/quote" className="text-primary hover:underline flex items-center">
-              Get started <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          <div className="bg-primary/5 rounded-lg p-8">
-            <h2 className="text-2xl font-semibold mb-4">Top Brands</h2>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              {brands?.slice(0, 4).map((brand) => (
-                <Link
-                  key={brand.id}
-                  to={`/brand/${brand.slug}`}
-                  className="text-primary hover:underline"
-                >
-                  {brand.name}
-                </Link>
-              ))}
-            </div>
-            <Link to="/brands" className="text-primary hover:underline flex items-center">
-              View all brands <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
+        <section className="bg-primary/5 rounded-lg p-8 animate-fade-up">
+          <h2 className="text-2xl font-semibold mb-4">Request a Quote</h2>
+          <p className="text-muted-foreground mb-4">
+            Get personalized quotes for your automation needs
+          </p>
+          <Link to="/quote" className="text-primary hover:underline flex items-center">
+            Get started <ChevronRight className="h-4 w-4 ml-1" />
+          </Link>
         </section>
       </main>
     </div>
