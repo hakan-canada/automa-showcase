@@ -173,7 +173,10 @@ const Product = () => {
             </div>
             <div className="flex flex-col">
               <div className="flex-grow">
-                <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+                <div className="flex items-center gap-2 mb-4">
+                  <h1 className="text-3xl font-bold">{product.name}</h1>
+                  <Badge variant="success" className="bg-green-500">In Stock</Badge>
+                </div>
                 <div className="flex gap-2 mb-4">
                   {product.categories && (
                     <Link to={`/category/${product.categories.slug}`}>
@@ -194,7 +197,7 @@ const Product = () => {
                 )}
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <Button 
                   className="w-full"
                   size="lg"
