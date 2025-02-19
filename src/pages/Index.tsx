@@ -1,8 +1,9 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navbar from '@/components/Navbar';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 
@@ -21,12 +22,15 @@ const FeaturedProduct = ({
 }) => (
   <Link to={`/product/${slug}`}>
     <Card className="p-6 hover:shadow-lg transition-shadow h-full">
-      <div className="w-full h-48 bg-muted rounded-md flex items-center justify-center mb-4">
-        <img
-          src={image || "/placeholder.svg"}
-          alt={name}
-          className="max-w-full max-h-full object-contain rounded-md"
-        />
+      <div className="relative">
+        <div className="w-full h-48 bg-muted rounded-md flex items-center justify-center mb-4">
+          <img
+            src={image || "/placeholder.svg"}
+            alt={name}
+            className="max-w-full max-h-full object-contain rounded-md"
+          />
+        </div>
+        <Badge variant="secondary" className="absolute top-2 right-2 bg-green-500 text-white">In Stock</Badge>
       </div>
       {brand && (
         <Badge variant="outline" className="mb-2">{brand.name}</Badge>
@@ -56,27 +60,25 @@ const Index = () => {
   });
 
   const { data: categories } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories-with-products'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories')
-        .select('*')
+        .select(`
+          *,
+          products:products(
+            id,
+            image
+          )
+        `)
         .limit(12);
 
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const { data: brands } = useQuery({
-    queryKey: ['brands'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('brands')
-        .select('*');
-
-      if (error) throw error;
-      return data;
+      if (categoriesError) throw categoriesError;
+      
+      return categoriesData?.map(category => ({
+        ...category,
+        thumbnail: category.products?.[0]?.image || "/placeholder.svg"
+      }));
     },
   });
 
@@ -144,12 +146,7 @@ const Index = () => {
         </section>
 
         <section className="mb-16 animate-fade-up">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-semibold">Top Brands</h2>
-            <Link to="/brands" className="text-primary flex items-center hover:underline">
-              View all <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
+          <h2 className="text-2xl font-semibold mb-8">Our Trusted Brands</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {topBrandLogos.map((brand) => (
               <Link
@@ -184,6 +181,13 @@ const Index = () => {
                 className="group"
               >
                 <Card className="p-6 hover:shadow-lg transition-shadow group-hover:border-primary">
+                  <div className="w-full h-32 mb-4 bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                    <img
+                      src={category.thumbnail}
+                      alt={category.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <h3 className="font-semibold group-hover:text-primary transition-colors">
                     {category.name}
                   </h3>
@@ -194,13 +198,18 @@ const Index = () => {
         </section>
 
         <section className="bg-primary/5 rounded-lg p-8 animate-fade-up">
-          <h2 className="text-2xl font-semibold mb-4">Request a Quote</h2>
-          <p className="text-muted-foreground mb-4">
-            Get personalized quotes for your automation needs
-          </p>
-          <Link to="/quote" className="text-primary hover:underline flex items-center">
-            Get started <ChevronRight className="h-4 w-4 ml-1" />
-          </Link>
+          <div className="flex items-start gap-4">
+            <FileText className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Request a Quote</h2>
+              <p className="text-muted-foreground mb-4">
+                Get personalized quotes for your automation needs
+              </p>
+              <Link to="/quote" className="text-primary hover:underline flex items-center">
+                Get started <ChevronRight className="h-4 w-4 ml-1" />
+              </Link>
+            </div>
+          </div>
         </section>
       </main>
     </div>

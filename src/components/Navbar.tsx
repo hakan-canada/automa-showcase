@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Menu, X } from 'lucide-react';
@@ -77,22 +76,20 @@ const Navbar = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Brands</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="w-[300px] p-4">
-                      <div className="flex flex-col space-y-2">
-                        {brands?.map((brand) => (
-                          <NavigationMenuLink
-                            key={brand.id}
-                            asChild
+                    <div className="w-[200px] p-2">
+                      {brands?.map((brand) => (
+                        <NavigationMenuLink
+                          key={brand.id}
+                          asChild
+                        >
+                          <Link
+                            to={`/brand/${brand.slug}`}
+                            className="block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
-                            <Link
-                              to={`/brand/${brand.slug}`}
-                              className="block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              {brand.name}
-                            </Link>
-                          </NavigationMenuLink>
-                        ))}
-                      </div>
+                            {brand.name}
+                          </Link>
+                        </NavigationMenuLink>
+                      ))}
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>

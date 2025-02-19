@@ -1,4 +1,3 @@
-
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,6 +5,8 @@ import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Badge } from '@/components/ui/badge';
+import { FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -42,7 +43,17 @@ const Search = () => {
         {isLoading ? (
           <div>Loading...</div>
         ) : products?.length === 0 ? (
-          <div>No products found</div>
+          <div className="flex flex-col items-center justify-center">
+            <p className="text-lg text-muted-foreground mb-4">
+              We may not have it in our system, but that doesn't mean we can't quote you.
+            </p>
+            <Link to="/quote">
+              <Button variant="outline" className="flex items-center">
+                <FileText className="mr-2 h-4 w-4" />
+                Request a Quote
+              </Button>
+            </Link>
+          </div>
         ) : (
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products?.map((product) => (
