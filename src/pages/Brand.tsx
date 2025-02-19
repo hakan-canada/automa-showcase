@@ -1,9 +1,11 @@
+
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import { useState } from 'react';
@@ -54,9 +56,9 @@ const Brand = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">{brand.name}</h1>
@@ -79,6 +81,13 @@ const Brand = () => {
           {productsData?.items.map((product) => (
             <Link key={product.id} to={`/product/${product.slug}`}>
               <Card className="p-4 hover:shadow-lg transition-shadow">
+                <div className="w-full h-48 bg-muted rounded-md flex items-center justify-center mb-4">
+                  <img
+                    src={product.image || "/placeholder.svg"}
+                    alt={product.name}
+                    className="max-w-full max-h-full object-contain rounded-md"
+                  />
+                </div>
                 <h3 className="font-semibold mb-2">{product.name}</h3>
                 {product.categories && (
                   <p className="text-sm text-muted-foreground mb-2">{product.categories.name}</p>
@@ -99,6 +108,7 @@ const Brand = () => {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 };
