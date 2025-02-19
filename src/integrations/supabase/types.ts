@@ -39,21 +39,18 @@ export type Database = {
       categories: {
         Row: {
           created_at: string
-          description: string | null
           id: number
           name: string
           slug: string
         }
         Insert: {
           created_at?: string
-          description?: string | null
           id?: number
           name: string
           slug: string
         }
         Update: {
           created_at?: string
-          description?: string | null
           id?: number
           name?: string
           slug?: string
@@ -62,40 +59,46 @@ export type Database = {
       }
       products: {
         Row: {
+          alternative_name: string | null
           brand_id: number | null
           category_id: number | null
           created_at: string
           description: string | null
           id: number
+          image: string | null
+          long_description: string | null
           name: string
-          price: number | null
           slug: string
-          specifications: Json | null
           updated_at: string
+          url: string | null
         }
         Insert: {
+          alternative_name?: string | null
           brand_id?: number | null
           category_id?: number | null
           created_at?: string
           description?: string | null
           id?: number
+          image?: string | null
+          long_description?: string | null
           name: string
-          price?: number | null
           slug: string
-          specifications?: Json | null
           updated_at?: string
+          url?: string | null
         }
         Update: {
+          alternative_name?: string | null
           brand_id?: number | null
           category_id?: number | null
           created_at?: string
           description?: string | null
           id?: number
+          image?: string | null
+          long_description?: string | null
           name?: string
-          price?: number | null
           slug?: string
-          specifications?: Json | null
           updated_at?: string
+          url?: string | null
         }
         Relationships: [
           {

@@ -20,8 +20,9 @@ interface RelatedProduct {
   id: number;
   name: string;
   slug: string;
-  price: number | null;
   description: string | null;
+  image: string | null;
+  url: string | null;
   categories: {
     name: string;
     slug: string;
@@ -48,7 +49,7 @@ const RelatedProductsTable = ({ products }: { products: RelatedProduct[] }) => (
             <TableCell>
               <div className="w-[80px] h-[80px] bg-muted rounded-md flex items-center justify-center">
                 <img
-                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                  src={product.image || "/placeholder.svg"}
                   alt={product.name}
                   className="max-w-full max-h-full object-cover rounded-md"
                 />
@@ -121,8 +122,9 @@ const Product = () => {
               id,
               name,
               slug,
-              price,
               description,
+              image,
+              url,
               categories:category_id (
                 name,
                 slug
@@ -164,7 +166,7 @@ const Product = () => {
           <div className="grid md:grid-cols-2 gap-8 p-6">
             <div className="flex items-center justify-center bg-muted rounded-lg p-4">
               <img
-                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                src={product.image || "/placeholder.svg"}
                 alt={product.name}
                 className="max-w-full h-auto rounded-md"
               />
@@ -185,14 +187,19 @@ const Product = () => {
                   )}
                 </div>
                 <p className="text-muted-foreground mb-6">{product.description}</p>
-                <p className="text-2xl font-bold mb-6">${product.price}</p>
+                {product.long_description && (
+                  <div className="prose prose-sm max-w-none mb-6">
+                    {product.long_description}
+                  </div>
+                )}
               </div>
               
               <div className="space-y-4">
                 <Button 
                   className="w-full"
                   size="lg"
-                  onClick={() => window.open('https://proax.ca/en/product/194654/phx2966171', '_blank')}
+                  onClick={() => product.url && window.open(product.url, '_blank')}
+                  disabled={!product.url}
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   Buy Now

@@ -10,27 +10,30 @@ import { Link } from 'react-router-dom';
 const FeaturedProduct = ({ 
   name, 
   description, 
-  category,
   brand,
-  price,
+  image,
   slug 
 }: { 
   name: string;
   description: string | null;
-  category: { name: string; slug: string };
   brand: { name: string; slug: string };
-  price: number | null;
+  image: string | null;
   slug: string;
 }) => (
   <Link to={`/product/${slug}`}>
     <Card className="p-6 hover:shadow-lg transition-shadow h-full">
-      <Badge className="mb-2">{category.name}</Badge>
-      <h3 className="text-lg font-semibold mb-2">{name}</h3>
-      <p className="text-muted-foreground text-sm mb-4">{description}</p>
-      <div className="flex justify-between items-center mt-auto">
-        <span className="text-primary font-bold">${price}</span>
-        <Badge variant="outline">{brand.name}</Badge>
+      <div className="w-full h-48 bg-muted rounded-md flex items-center justify-center mb-4">
+        <img
+          src={image || "/placeholder.svg"}
+          alt={name}
+          className="max-w-full max-h-full object-contain rounded-md"
+        />
       </div>
+      {brand && (
+        <Badge variant="outline" className="mb-2">{brand.name}</Badge>
+      )}
+      <h3 className="text-lg font-semibold mb-2">{name}</h3>
+      <p className="text-muted-foreground text-sm line-clamp-2">{description}</p>
     </Card>
   </Link>
 );
@@ -58,7 +61,8 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('categories')
-        .select('*');
+        .select('*')
+        .limit(12);
 
       if (error) throw error;
       return data;
@@ -104,9 +108,8 @@ const Index = () => {
                 key={product.id}
                 name={product.name}
                 description={product.description}
-                category={product.categories}
                 brand={product.brands}
-                price={product.price}
+                image={product.image}
                 slug={product.slug}
               />
             ))}
@@ -114,7 +117,12 @@ const Index = () => {
         </section>
 
         <section className="mb-16 animate-fade-up">
-          <h2 className="text-2xl font-semibold mb-8">Browse by Category</h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-semibold">Browse by Category</h2>
+            <Link to="/categories" className="text-primary flex items-center hover:underline">
+              View all <ChevronRight className="h-4 w-4 ml-1" />
+            </Link>
+          </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {categories?.map((category) => (
               <Link
@@ -158,7 +166,7 @@ const Index = () => {
                 </Link>
               ))}
             </div>
-            <Link to="/brand/siemens" className="text-primary hover:underline flex items-center">
+            <Link to="/brands" className="text-primary hover:underline flex items-center">
               View all brands <ChevronRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
