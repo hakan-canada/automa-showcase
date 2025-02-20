@@ -73,11 +73,27 @@ const Product = () => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <main className="container mx-auto px-4 py-8 flex-grow">
+          <div>Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   if (!product) {
-    return <div>Product not found</div>;
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <main className="container mx-auto px-4 py-8 flex-grow">
+          <div>Product not found</div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -96,16 +112,23 @@ const Product = () => {
             <div className="flex flex-col">
               <div className="flex-grow">
                 <ProductHeader 
-                  name={product.name}
+                  name={`${product.brands?.name} ${product.name}`}
                   categories={product.categories}
                   brands={product.brands}
                 />
-                <p className="text-muted-foreground mb-6">{product.description}</p>
-                {product.long_description && (
-                  <div className="prose prose-sm max-w-none mb-6">
-                    {product.long_description}
-                  </div>
+                {product.alternative_name && (
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Alternative Name: {product.alternative_name}
+                  </p>
                 )}
+                <div className="space-y-4 mb-8">
+                  <p className="text-muted-foreground">{product.description}</p>
+                  {product.long_description && (
+                    <div className="prose prose-sm max-w-none">
+                      {product.long_description}
+                    </div>
+                  )}
+                </div>
               </div>
               <ProductActions 
                 productName={product.name}

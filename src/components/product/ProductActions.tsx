@@ -9,7 +9,7 @@ interface ProductActionsProps {
 }
 
 export const ProductActions = ({ productName, productUrl }: ProductActionsProps) => (
-  <div className="space-y-6">
+  <div className="space-y-8">
     <Button 
       className="w-full"
       size="lg"

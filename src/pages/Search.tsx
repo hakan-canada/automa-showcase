@@ -21,7 +21,8 @@ const Search = () => {
     queryFn: async () => {
       if (!query) return { items: [], total: 0 };
 
-      const [searchResult, countResult] = await Promise.all([
+      const [productResults, brandResults] = await Promise.all([
+        // Search in products
         supabase
           .from('products')
           .select(`
@@ -29,20 +30,31 @@ const Search = () => {
             brands:brand_id(*),
             categories:category_id(*)
           `)
-          .textSearch('name', query)
+          .or(`name.ilike.%${query}%, alternative_name.ilike.%${query}%`)
           .limit(SEARCH_LIMIT),
+        
+        // Get products by brand name
         supabase
           .from('products')
-          .select('id', { count: 'exact' })
-          .textSearch('name', query)
+          .select(`
+            *,
+            brands:brand_id!inner(*),
+            categories:category_id(*)
+          `)
+          .ilike('brands.name', `%${query}%`)
+          .limit(SEARCH_LIMIT)
       ]);
 
-      if (searchResult.error) throw searchResult.error;
-      if (countResult.error) throw countResult.error;
+      if (productResults.error) throw productResults.error;
+      if (brandResults.error) throw brandResults.error;
+
+      // Combine and deduplicate results
+      const allProducts = [...productResults.data, ...brandResults.data];
+      const uniqueProducts = Array.from(new Map(allProducts.map(item => [item.id, item])).values());
 
       return {
-        items: searchResult.data || [],
-        total: countResult.count || 0
+        items: uniqueProducts.slice(0, SEARCH_LIMIT),
+        total: uniqueProducts.length
       };
     },
   });
@@ -86,7 +98,9 @@ const Search = () => {
                       className="max-w-full max-h-full object-contain rounded-md"
                     />
                   </div>
-                  <h3 className="font-semibold mb-2">{product.name}</h3>
+                  <h3 className="font-semibold mb-2">
+                    {product.brands?.name} {product.name}
+                  </h3>
                   {product.brands && (
                     <Badge variant="secondary" className="mb-2">
                       {product.brands.name}
