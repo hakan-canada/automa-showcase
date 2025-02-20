@@ -1,8 +1,12 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { create } from 'xmlbuilder2';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import fs from 'fs';
-import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const SUPABASE_URL = "https://ykcgooinlzlhtonueasz.supabase.co";
 const SUPABASE_KEY = process.env.SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrY2dvb2lubHpsaHRvbnVlYXN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyODg4MjMsImV4cCI6MjA1NDg2NDgyM30.IthQpwAUGv_Ku5lOf6g9YyUqlm-xDCdweLY1U3AVJaQ";
@@ -51,15 +55,15 @@ async function generateSitemap() {
 
   const sitemapXML = xml.end({ prettyPrint: true });
 
-  // Ensure the public directory exists
-  const publicDir = path.join(process.cwd(), 'public');
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir);
+  // Write to the dist directory for production builds
+  const distDir = join(process.cwd(), 'dist');
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
   }
 
-  // Write the sitemap to public/sitemap.xml
-  fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapXML);
-  console.log('Sitemap generated successfully!');
+  // Write the sitemap to dist/sitemap.xml
+  fs.writeFileSync(join(distDir, 'sitemap.xml'), sitemapXML);
+  console.log('Sitemap generated successfully in dist/sitemap.xml!');
 }
 
 generateSitemap().catch(console.error);

@@ -8,3 +8,11 @@
   for = "/sitemap.xml"
   [headers.values]
     Content-Type = "application/xml"
+    Access-Control-Allow-Origin = "*"
+
+[build]
+  command = "vite build && node scripts/generateSitemap.js"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
