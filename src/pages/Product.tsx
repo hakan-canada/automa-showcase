@@ -1,91 +1,13 @@
 
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import Navbar from '@/components/Navbar';
-import { Button } from '@/components/ui/button';
-import { ShoppingCart, FileText } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-interface RelatedProduct {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  image: string | null;
-  url: string | null;
-  categories: {
-    name: string;
-    slug: string;
-  } | null;
-  brands: {
-    name: string;
-    slug: string;
-  } | null;
-}
-
-const RelatedProductsTable = ({ products }: { products: RelatedProduct[] }) => (
-  <div className="overflow-x-auto">
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Image</TableHead>
-          <TableHead className="min-w-[200px]">Product Details</TableHead>
-          <TableHead className="hidden md:table-cell">Description</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {products.map((product) => (
-          <TableRow key={product.id}>
-            <TableCell>
-              <div className="w-[80px] h-[80px] bg-muted rounded-md flex items-center justify-center">
-                <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  className="max-w-full max-h-full object-cover rounded-md"
-                />
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="space-y-2">
-                <Link 
-                  to={`/product/${product.slug}`}
-                  className="font-medium hover:underline block"
-                >
-                  {product.name}
-                </Link>
-                {product.brands && (
-                  <Badge variant="secondary" className="text-xs">
-                    {product.brands.name}
-                  </Badge>
-                )}
-                <div className="md:hidden">
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
-                    {product.description}
-                  </p>
-                </div>
-              </div>
-            </TableCell>
-            <TableCell className="hidden md:table-cell max-w-xl">
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {product.description}
-              </p>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </div>
-);
+import Footer from '@/components/Footer';
+import { RelatedProductsTable } from '@/components/product/RelatedProductsTable';
+import { ProductHeader } from '@/components/product/ProductHeader';
+import { ProductActions } from '@/components/product/ProductActions';
 
 const Product = () => {
   const { slug } = useParams();
@@ -142,7 +64,7 @@ const Product = () => {
           return [];
         }
 
-        return data.map(item => item.products) as RelatedProduct[];
+        return data.map(item => item.products);
       } catch (error) {
         console.error('Error in related products query:', error);
         return [];
@@ -159,9 +81,9 @@ const Product = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <Card className="overflow-hidden mb-8">
           <div className="grid md:grid-cols-2 gap-8 p-6">
             <div className="flex items-center justify-center bg-muted rounded-lg p-4">
@@ -173,22 +95,11 @@ const Product = () => {
             </div>
             <div className="flex flex-col">
               <div className="flex-grow">
-                <div className="flex items-center gap-2 mb-4">
-                  <h1 className="text-3xl font-bold">{product.name}</h1>
-                  <Badge variant="secondary" className="bg-green-500 text-white">In Stock</Badge>
-                </div>
-                <div className="flex gap-2 mb-4">
-                  {product.categories && (
-                    <Link to={`/category/${product.categories.slug}`}>
-                      <Badge variant="secondary">{product.categories.name}</Badge>
-                    </Link>
-                  )}
-                  {product.brands && (
-                    <Link to={`/brand/${product.brands.slug}`}>
-                      <Badge>{product.brands.name}</Badge>
-                    </Link>
-                  )}
-                </div>
+                <ProductHeader 
+                  name={product.name}
+                  categories={product.categories}
+                  brands={product.brands}
+                />
                 <p className="text-muted-foreground mb-6">{product.description}</p>
                 {product.long_description && (
                   <div className="prose prose-sm max-w-none mb-6">
@@ -196,31 +107,10 @@ const Product = () => {
                   </div>
                 )}
               </div>
-              
-              <div className="space-y-6">
-                <Button 
-                  className="w-full"
-                  size="lg"
-                  onClick={() => product.url && window.open(product.url, '_blank')}
-                  disabled={!product.url}
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Buy Now
-                </Button>
-                <Link 
-                  to={`/quote?product=${encodeURIComponent(product.name)}`}
-                  className="w-full"
-                >
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    size="lg"
-                  >
-                    <FileText className="mr-2 h-5 w-5" />
-                    Request Quote
-                  </Button>
-                </Link>
-              </div>
+              <ProductActions 
+                productName={product.name}
+                productUrl={product.url}
+              />
             </div>
           </div>
         </Card>
@@ -232,6 +122,7 @@ const Product = () => {
           </section>
         )}
       </main>
+      <Footer />
     </div>
   );
 };
