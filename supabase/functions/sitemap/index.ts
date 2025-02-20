@@ -51,8 +51,14 @@ async function generateSitemap() {
 }
 
 Deno.serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, {
+      headers: {
+        ...corsHeaders,
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      }
+    });
   }
 
   const url = new URL(req.url);
@@ -62,7 +68,10 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({ url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/sitemap` }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        }
       }
     );
   }
@@ -74,14 +83,14 @@ Deno.serve(async (req) => {
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
-      },
+        'Cache-Control': 'public, max-age=3600',
+      }
     });
   } catch (error) {
     console.error('Error generating sitemap:', error);
     return new Response(JSON.stringify({ error: 'Failed to generate sitemap' }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });
