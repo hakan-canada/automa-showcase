@@ -1,7 +1,7 @@
 
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider, HelmetServerState } from 'react-helmet-async';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import './App.css';
 import { Router } from './Router';
@@ -16,9 +16,12 @@ const queryClient = new QueryClient({
   },
 });
 
+// Initialize helmet context
+const helmetContext = {};
+
 function App() {
   return (
-    <HelmetProvider>
+    <HelmetProvider context={helmetContext}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <BrowserRouter>
