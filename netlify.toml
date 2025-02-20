@@ -1,3 +1,4 @@
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -16,3 +17,7 @@
 [build.environment]
   NODE_VERSION = "20"
   NETLIFY_EXPERIMENTAL_FEATURES_OPT_IN = "prerender"
+
+[[edge_functions]]
+  path = "/*"
+  function = "transform"
