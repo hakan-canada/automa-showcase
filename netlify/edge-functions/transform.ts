@@ -19,16 +19,38 @@ export default async (request: Request, context: Context) => {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Define meta tags based on the path
+    // Default meta tags
     let title = "Industrial Automation Parts From Top Manufacturers";
     let description = "Find quality industrial automation solutions and products from leading manufacturers at parts supplied.";
     let ogImage = "https://partssupplied.com/og-image.png";
-    
+
     // Match product pages
     if (path.startsWith('/product/')) {
       const productSlug = path.split('/').pop();
-      title = `${productSlug} | Parts Supplied`;
-      description = `Details about ${productSlug} - Industrial Automation Parts`;
+      // Extract the product name from the HTML (h1 heading)
+      const h1Match = page.match(/<h2[^>]*class="[^"]*font-medium[^"]*"[^>]*>(.*?)<\/h2>/);
+      const h1Text = h1Match ? h1Match[1] : productSlug;
+
+      // Extract product description from meta tags
+      const descMatch = page.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/);
+      const productDesc = descMatch ? descMatch[1] : '';
+
+      // Extract product image from meta tags
+      const imgMatch = page.match(/<img[^>]*src="([^"]*)"[^>]*alt="[^"]*"/);
+      ogImage = imgMatch ? imgMatch[1] : ogImage;
+
+      title = `Buy ${h1Text} | Parts Supplied`;
+      description = `Discover ${h1Text} online. ${productDesc}`;
+    }
+    // Match category pages
+    else if (path.startsWith('/category/')) {
+      const categorySlug = path.split('/').pop();
+      // Extract category name from h1
+      const h1Match = page.match(/<h1[^>]*>(.*?)<\/h1>/);
+      const categoryName = h1Match ? h1Match[1] : categorySlug;
+
+      title = `Shop ${categoryName} | Parts Supplied`;
+      description = `Browse our selection of ${categoryName} products. We offer in stock items from top manufacturers with competitive pricing and fast shipping.`;
     }
 
     // Update meta tags in the HTML
