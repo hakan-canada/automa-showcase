@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { RelatedProductsTable } from '@/components/product/RelatedProductsTable';
 import { ProductHeader } from '@/components/product/ProductHeader';
 import { ProductActions } from '@/components/product/ProductActions';
+import { SEO } from '@/components/SEO';
 
 const Product = () => {
   const { slug } = useParams();
@@ -95,8 +96,16 @@ const Product = () => {
     );
   }
 
+  const productFullName = `${product.brands?.name} ${product.name}`;
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEO
+        title={`Buy ${productFullName} | Parts Supplied`}
+        description={`Discover ${productFullName} online. ${product.description || ''}`}
+        canonicalUrl={`https://partssupplied.com/product/${slug}`}
+        type="product"
+      />
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">
         <Card className="overflow-hidden mb-8">

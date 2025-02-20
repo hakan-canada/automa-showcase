@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
+import { SEO } from '@/components/SEO';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -98,6 +99,11 @@ const Category = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEO
+        title={`Shop ${category.name} | Parts Supplied`}
+        description={`Browse our selection of ${category.name} products. We offer in stock items from top manufacturers with competitive pricing and fast shipping.`}
+        canonicalUrl={`https://partssupplied.com/category/${slug}`}
+      />
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">
         <h1 className="text-3xl font-bold mb-8">{category.name}</h1>

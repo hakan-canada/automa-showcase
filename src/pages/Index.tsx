@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import { ChevronRight, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
 
 const FeaturedProduct = ({ 
   name, 
@@ -112,6 +113,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEO
+        title="Industrial Automation Parts From Top Manufacturers"
+        description="Find quality industrial automation solutions and products from leading manufacturers at parts supplied."
+        canonicalUrl="https://partssupplied.com"
+      />
       <Navbar />
       
       <main className="container mx-auto px-4 py-8 flex-grow">
