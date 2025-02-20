@@ -117,6 +117,8 @@ const Index = () => {
         title="Industrial Automation Parts From Top Manufacturers"
         description="Find quality industrial automation solutions and products from leading manufacturers at parts supplied."
         canonicalUrl="https://partssupplied.com"
+        type="website"
+        image="https://partssupplied.com/og-image.png"
       />
       <Navbar />
       
