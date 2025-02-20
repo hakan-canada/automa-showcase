@@ -9,7 +9,6 @@ import Category from "./pages/Category";
 import Brand from "./pages/Brand";
 import Categories from "./pages/Categories";
 import Search from "./pages/Search";
-import SitemapXML from "./pages/sitemap.xml";
 
 export const Router = () => {
   return (
@@ -22,7 +21,6 @@ export const Router = () => {
       <Route path="/categories" element={<Categories />} />
       <Route path="/brand/:slug" element={<Brand />} />
       <Route path="/search" element={<Search />} />
-      <Route path="/sitemap.xml" element={<SitemapXML />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
