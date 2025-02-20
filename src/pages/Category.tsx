@@ -100,9 +100,10 @@ const Category = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEO
-        title={`Shop ${category.name} | Parts Supplied`}
-        description={`Browse our selection of ${category.name} products. We offer in stock items from top manufacturers with competitive pricing and fast shipping.`}
+        title={`${category.name} Products | Parts Supplied`}
+        description={`Explore our selection of ${category.name} products. Find high-quality industrial automation components with competitive pricing and fast shipping.`}
         canonicalUrl={`https://partssupplied.com/category/${slug}`}
+        type="website"
       />
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">

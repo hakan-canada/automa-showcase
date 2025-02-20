@@ -97,14 +97,16 @@ const Product = () => {
   }
 
   const productFullName = `${product.brands?.name} ${product.name}`;
+  const productDescription = product.description || `Details about ${productFullName}`;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEO
-        title={`Buy ${productFullName} | Parts Supplied`}
-        description={`Discover ${productFullName} online. ${product.description || ''}`}
+        title={`${productFullName} | Parts Supplied`}
+        description={productDescription}
         canonicalUrl={`https://partssupplied.com/product/${slug}`}
         type="product"
+        image={product.image || undefined}
       />
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">
