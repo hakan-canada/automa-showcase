@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 const Sitemap = () => {
   useEffect(() => {
     const redirectToSitemap = async () => {
-      const { data, error } = await supabase.functions.invoke('sitemap', {
+      const { data: functionData, error } = await supabase.functions.invoke('sitemap', {
         method: 'GET'
       });
       
@@ -15,16 +15,19 @@ const Sitemap = () => {
       }
       
       const session = await supabase.auth.getSession();
-      const response = await fetch(data.url, {
+      const response = await fetch(functionData.url, {
         headers: {
-          'Authorization': `Bearer ${session.data.session?.access_token}`
+          'apikey': supabase.supabaseKey
         }
       });
       
       const xml = await response.text();
-      document.open('text/xml');
-      document.write(xml);
-      document.close();
+      
+      // Create a new document with the correct content type
+      const xmlDoc = '<?xml version="1.0" encoding="UTF-8"?>\n' + xml;
+      const blob = new Blob([xmlDoc], { type: 'application/xml' });
+      const url = window.URL.createObjectURL(blob);
+      window.location.href = url;
     };
 
     redirectToSitemap();
