@@ -44,12 +44,12 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center min-h-[80px]">
           <Link to="/" className="flex items-center">
             <img 
               src="https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//partssuppliedlogo.png"
               alt="PartsSupplied Logo"
-              className="h-12 w-auto"
+              className="h-16 w-auto" // Increased from h-12 to h-16
             />
           </Link>
 
