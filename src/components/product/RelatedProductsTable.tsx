@@ -41,22 +41,23 @@ export const RelatedProductsTable = ({ products }: { products: RelatedProduct[] 
         {products.map((product) => (
           <TableRow key={product.id}>
             <TableCell>
-              <div className="w-[80px] h-[80px] bg-muted rounded-md flex items-center justify-center">
-                <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  className="max-w-full max-h-full object-cover rounded-md"
-                />
-              </div>
+              <Link to={`/product/${product.slug}`}>
+                <div className="w-[80px] h-[80px] bg-muted rounded-md flex items-center justify-center">
+                  <img
+                    src={product.image || "/placeholder.svg"}
+                    alt={product.name}
+                    className="max-w-full max-h-full object-cover rounded-md"
+                  />
+                </div>
+              </Link>
             </TableCell>
             <TableCell>
               <div className="space-y-2">
-                <Link 
-                  to={`/product/${product.slug}`}
-                  className="font-medium hover:underline block"
-                >
-                  {product.name}
-                </Link>
+                <h2 className="font-medium hover:underline">
+                  <Link to={`/product/${product.slug}`}>
+                    {product.name}
+                  </Link>
+                </h2>
                 {product.brands && (
                   <Badge variant="secondary" className="text-xs">
                     {product.brands.name}

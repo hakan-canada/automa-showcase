@@ -30,8 +30,8 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-muted-foreground">
-              <li>Email: info@automationhub.com</li>
-              <li>Phone: (123) 456-7890</li>
+              <li>Email: quote@partssupplied.com</li>
+              <li>Website: partssupplied.com</li>
             </ul>
           </div>
           
@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t mt-8 pt-8 text-center text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} AutomationHub. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} PartsSupplied. All rights reserved.</p>
         </div>
       </div>
     </footer>

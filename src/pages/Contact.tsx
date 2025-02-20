@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { Phone, Mail, Clock } from "lucide-react";
+import Footer from "@/components/Footer";
 
 const Contact = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -30,16 +30,11 @@ const Contact = () => {
             </p>
           </section>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <Card className="p-6 text-center">
-              <Phone className="w-6 h-6 mx-auto mb-4 text-primary" />
-              <h3 className="font-semibold mb-2">Call Us</h3>
-              <p className="text-muted-foreground">1-800-AUTOHUB</p>
-            </Card>
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
             <Card className="p-6 text-center">
               <Mail className="w-6 h-6 mx-auto mb-4 text-primary" />
               <h3 className="font-semibold mb-2">Email Us</h3>
-              <p className="text-muted-foreground">support@autohub.com</p>
+              <p className="text-muted-foreground">quote@partssupplied.com</p>
             </Card>
             <Card className="p-6 text-center">
               <Clock className="w-6 h-6 mx-auto mb-4 text-primary" />
@@ -118,6 +113,7 @@ const Contact = () => {
           </Card>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
