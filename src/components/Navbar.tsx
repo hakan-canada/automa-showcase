@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Menu, X } from 'lucide-react';
@@ -44,8 +45,12 @@ const Navbar = () => {
     <nav className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-xl font-semibold">
-            AutomationHub
+          <Link to="/" className="flex items-center">
+            <img 
+              src="https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//partssuppliedlogo.png"
+              alt="PartsSupplied Logo"
+              className="h-12 w-auto"
+            />
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
