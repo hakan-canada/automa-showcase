@@ -14,9 +14,10 @@ const Sitemap = () => {
         return;
       }
       
+      const session = await supabase.auth.getSession();
       const response = await fetch(data.url, {
         headers: {
-          'Authorization': `Bearer ${supabase.auth.session()?.access_token}`
+          'Authorization': `Bearer ${session.data.session?.access_token}`
         }
       });
       
