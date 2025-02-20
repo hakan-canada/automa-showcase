@@ -1,8 +1,8 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { ChevronRight, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -111,10 +111,10 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <section className="text-center mb-16 animate-fade-up">
           <h1 className="text-4xl font-bold mb-4">
             Industrial Automation Solutions
@@ -212,6 +212,8 @@ const Index = () => {
           </div>
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 };

@@ -2,71 +2,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-
-const ProductCard = ({ 
-  name, 
-  description,
-  brand,
-  image,
-  slug 
-}: { 
-  name: string;
-  description: string | null;
-  brand: { name: string; slug: string } | null;
-  image: string | null;
-  slug: string;
-}) => (
-  <Link to={`/product/${slug}`}>
-    <Card className="p-6 hover:shadow-lg transition-shadow h-full">
-      <div className="relative">
-        <div className="w-full h-48 bg-muted rounded-md flex items-center justify-center mb-4">
-          <img
-            src={image || "/placeholder.svg"}
-            alt={name}
-            className="max-w-full max-h-full object-contain rounded-md"
-          />
-        </div>
-        <Badge variant="secondary" className="absolute top-2 right-2 bg-green-500 text-white">In Stock</Badge>
-      </div>
-      {brand && (
-        <Badge variant="outline" className="mb-2">{brand.name}</Badge>
-      )}
-      <h3 className="text-lg font-semibold mb-2">{name}</h3>
-      <p className="text-muted-foreground text-sm line-clamp-2">{description}</p>
-    </Card>
-  </Link>
-);
+import { Badge } from '@/components/ui/badge';
 
 const Categories = () => {
-  const { data: categoriesData } = useQuery({
-    queryKey: ['categories-with-products'],
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ['categories'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('categories')
-        .select(`
-          *,
-          products(
-            id,
-            name,
-            slug,
-            description,
-            image,
-            brands:brand_id(*)
-          )
-        `)
+        .select('*')
         .order('name');
 
       if (error) throw error;
-      
-      return data?.map(category => ({
-        ...category,
-        thumbnail: category.products?.[0]?.image || "/placeholder.svg",
-        products: category.products || []
-      }));
+      return data;
     },
   });
 
@@ -74,31 +25,28 @@ const Categories = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">
-        {categoriesData?.map((category) => (
-          <section key={category.id} className="mb-12">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold">{category.name}</h2>
-              <Link 
-                to={`/category/${category.slug}`}
-                className="text-primary hover:underline"
-              >
-                View all products
-              </Link>
-            </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {category.products.slice(0, 4).map((product) => (
-                <ProductCard
-                  key={product.id}
-                  name={product.name}
-                  description={product.description}
-                  brand={product.brands}
-                  image={product.image}
-                  slug={product.slug}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-4">Product Categories</h1>
+          <p className="text-muted-foreground">
+            Browse our comprehensive range of industrial automation products by category
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {categories?.map((category) => (
+            <Link
+              key={category.id}
+              to={`/category/${category.slug}`}
+              className="group"
+            >
+              <Card className="p-4 hover:shadow-lg transition-shadow border-2 hover:border-primary">
+                <h2 className="font-semibold group-hover:text-primary transition-colors">
+                  {category.name}
+                </h2>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </main>
       <Footer />
     </div>

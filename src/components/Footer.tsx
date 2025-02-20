@@ -10,6 +10,11 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
+                <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
                 <Link to="/categories" className="text-muted-foreground hover:text-primary transition-colors">
                   Categories
                 </Link>
@@ -30,8 +35,14 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-muted-foreground">
-              <li>Email: quote@partssupplied.com</li>
-              <li>Website: partssupplied.com</li>
+              <li>
+                <a 
+                  href="mailto:quote@partssupplied.com" 
+                  className="hover:text-primary transition-colors"
+                >
+                  quote@partssupplied.com
+                </a>
+              </li>
             </ul>
           </div>
           
