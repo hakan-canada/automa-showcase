@@ -16,22 +16,14 @@ const Sitemap = () => {
       
       const response = await fetch(data.url, {
         headers: {
-          'apikey': supabase.supabaseKey,
+          'Authorization': `Bearer ${supabase.auth.session()?.access_token}`
         }
       });
       
       const xml = await response.text();
-      const blob = new Blob([xml], { type: 'application/xml' });
-      const url = window.URL.createObjectURL(blob);
-      
-      // Create an invisible link and click it to trigger the download
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      document.open('text/xml');
+      document.write(xml);
+      document.close();
     };
 
     redirectToSitemap();

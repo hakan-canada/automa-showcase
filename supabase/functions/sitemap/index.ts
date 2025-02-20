@@ -61,28 +61,13 @@ Deno.serve(async (req) => {
     });
   }
 
-  const url = new URL(req.url);
-  const wantsUrl = url.searchParams.get('url') === 'true';
-
-  if (wantsUrl) {
-    return new Response(
-      JSON.stringify({ url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/sitemap` }),
-      {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        }
-      }
-    );
-  }
-
   try {
     const sitemap = await generateSitemap();
     
     return new Response(sitemap, {
       headers: {
         ...corsHeaders,
-        'Content-Type': 'application/xml',
+        'Content-Type': 'application/xml; charset=UTF-8',
         'Cache-Control': 'public, max-age=3600',
       }
     });
