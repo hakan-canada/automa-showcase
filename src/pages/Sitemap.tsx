@@ -4,33 +4,28 @@ import { supabase } from '@/integrations/supabase/client';
 
 const Sitemap = () => {
   useEffect(() => {
-    const redirectToSitemap = async () => {
-      const { data: functionData, error } = await supabase.functions.invoke('sitemap', {
-        method: 'GET'
-      });
-      
-      if (error) {
-        console.error('Error fetching sitemap:', error);
-        return;
-      }
-      
-      const session = await supabase.auth.getSession();
-      const response = await fetch(functionData.url, {
-        headers: {
-          'apikey': supabase.supabaseKey
+    const getSitemap = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('sitemap', {
+          method: 'GET'
+        });
+        
+        if (error) {
+          console.error('Error fetching sitemap:', error);
+          return;
         }
-      });
-      
-      const xml = await response.text();
-      
-      // Create a new document with the correct content type
-      const xmlDoc = '<?xml version="1.0" encoding="UTF-8"?>\n' + xml;
-      const blob = new Blob([xmlDoc], { type: 'application/xml' });
-      const url = window.URL.createObjectURL(blob);
-      window.location.href = url;
+
+        // Set the content type to XML
+        const doc = document.implementation.createHTMLDocument('');
+        doc.documentElement.innerHTML = data.sitemap;
+        document.documentElement.innerHTML = doc.documentElement.innerHTML;
+        document.querySelector('html')?.setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+      } catch (err) {
+        console.error('Error processing sitemap:', err);
+      }
     };
 
-    redirectToSitemap();
+    getSitemap();
   }, []);
 
   return null;

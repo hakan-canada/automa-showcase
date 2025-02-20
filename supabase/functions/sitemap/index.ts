@@ -63,18 +63,23 @@ Deno.serve(async (req) => {
   try {
     const sitemap = await generateSitemap();
     
-    return new Response(sitemap, {
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/xml; charset=UTF-8',
-        'Cache-Control': 'public, max-age=3600',
+    return new Response(
+      JSON.stringify({ sitemap }), 
+      {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        }
       }
-    });
+    );
   } catch (error) {
     console.error('Error generating sitemap:', error);
-    return new Response(JSON.stringify({ error: 'Failed to generate sitemap' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
+    return new Response(
+      JSON.stringify({ error: 'Failed to generate sitemap' }), 
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
   }
 });
