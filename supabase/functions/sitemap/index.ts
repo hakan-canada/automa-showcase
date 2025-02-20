@@ -55,6 +55,18 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const url = new URL(req.url);
+  const wantsUrl = url.searchParams.get('url') === 'true';
+
+  if (wantsUrl) {
+    return new Response(
+      JSON.stringify({ url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/sitemap` }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
   try {
     const sitemap = await generateSitemap();
     
