@@ -9,6 +9,7 @@ import Category from "./pages/Category";
 import Brand from "./pages/Brand";
 import Categories from "./pages/Categories";
 import Search from "./pages/Search";
+import SitemapXML from "./pages/sitemap.xml";
 
 export const Router = () => {
   return (
