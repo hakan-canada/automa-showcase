@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,6 @@ const Contact = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const onSubmit = (data: any) => {
-    // Form will be handled by Netlify
     reset();
   };
 
@@ -44,13 +44,21 @@ const Contact = () => {
           </div>
 
           <Card className="p-8">
+            {/* Hidden form for Netlify detection */}
+            <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+              <input type="text" name="name" />
+              <input type="email" name="email" />
+              <input type="text" name="company" />
+              <textarea name="message"></textarea>
+            </form>
+
             <form 
-              onSubmit={handleSubmit(onSubmit)}
               name="contact"
               method="POST"
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               className="space-y-6"
+              onSubmit={handleSubmit(onSubmit)}
             >
               <input type="hidden" name="form-name" value="contact" />
               <p className="hidden">
@@ -64,6 +72,7 @@ const Contact = () => {
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
+                    name="name"
                     {...register("name", { required: true })}
                     className={errors.name ? "border-destructive" : ""}
                   />
@@ -76,6 +85,7 @@ const Contact = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     {...register("email", { 
                       required: true,
@@ -91,13 +101,14 @@ const Contact = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="company">Company (Optional)</Label>
-                <Input id="company" {...register("company")} />
+                <Input id="company" name="company" {...register("company")} />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="message">Message</Label>
                 <Textarea
                   id="message"
+                  name="message"
                   {...register("message", { required: true })}
                   className={`min-h-[150px] ${errors.message ? "border-destructive" : ""}`}
                 />

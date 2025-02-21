@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,6 @@ const Quote = () => {
   const productName = searchParams.get('product');
 
   const onSubmit = (data: any) => {
-    // Form will be handled by Netlify
     reset();
   };
 
@@ -50,13 +50,23 @@ const Quote = () => {
           </div>
 
           <Card className="p-8">
+            {/* Hidden form for Netlify detection */}
+            <form name="quote" netlify netlify-honeypot="bot-field" hidden>
+              <input type="text" name="name" />
+              <input type="email" name="email" />
+              <input type="text" name="company" />
+              <input type="tel" name="phone" />
+              <input type="text" name="timeline" />
+              <textarea name="products"></textarea>
+            </form>
+
             <form
-              onSubmit={handleSubmit(onSubmit)}
               name="quote"
               method="POST"
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               className="space-y-6"
+              onSubmit={handleSubmit(onSubmit)}
             >
               <input type="hidden" name="form-name" value="quote" />
               <p className="hidden">
@@ -70,6 +80,7 @@ const Quote = () => {
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
+                    name="name"
                     {...register("name", { required: true })}
                     className={errors.name ? "border-destructive" : ""}
                   />
@@ -82,6 +93,7 @@ const Quote = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     {...register("email", { 
                       required: true,
@@ -100,6 +112,7 @@ const Quote = () => {
                   <Label htmlFor="company">Company</Label>
                   <Input
                     id="company"
+                    name="company"
                     {...register("company", { required: true })}
                     className={errors.company ? "border-destructive" : ""}
                   />
@@ -110,7 +123,7 @@ const Quote = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone (Optional)</Label>
-                  <Input id="phone" type="tel" {...register("phone")} />
+                  <Input id="phone" name="phone" type="tel" {...register("phone")} />
                 </div>
               </div>
 
@@ -118,6 +131,7 @@ const Quote = () => {
                 <Label htmlFor="products">Products Needed</Label>
                 <Textarea
                   id="products"
+                  name="products"
                   {...register("products", { required: true })}
                   placeholder="Please list the products you need quotes for, including quantities and any specific requirements."
                   className={`min-h-[150px] ${errors.products ? "border-destructive" : ""}`}
@@ -132,6 +146,7 @@ const Quote = () => {
                 <Label htmlFor="timeline">Timeline (Optional)</Label>
                 <Input
                   id="timeline"
+                  name="timeline"
                   placeholder="When do you need these products?"
                   {...register("timeline")}
                 />
