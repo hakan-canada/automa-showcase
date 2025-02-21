@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,41 +6,18 @@ import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { FileText, Clock } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Quote = () => {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
   const [searchParams] = useSearchParams();
   const productName = searchParams.get('product');
-  
+  const [productValue, setProductValue] = useState("");
+
   useEffect(() => {
     if (productName) {
-      setValue("products", productName);
+      setProductValue(productName);
     }
-  }, [productName, setValue]);
-
-  const onSubmit = (data) => {
-    // For Netlify to work with React forms, we need to encode the form data
-    // and submit it programmatically
-    const formData = new FormData();
-    
-    Object.keys(data).forEach(key => {
-      formData.append(key, data[key]);
-    });
-    
-    // Submit the form data to Netlify
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(formData).toString()
-    })
-      .then(() => {
-        console.log("Form successfully submitted");
-        reset();
-        // You could add success messaging here
-      })
-      .catch(error => console.error(error));
-  };
+  }, [productName]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,42 +56,31 @@ const Quote = () => {
               method="POST"
               data-netlify="true"
               data-netlify-honeypot="bot-field"
+              action="/success"
               className="space-y-6"
-              onSubmit={handleSubmit(onSubmit)}
             >
-              {/* Important: These two hidden fields are required for Netlify */}
+              {/* Required Netlify fields */}
               <input type="hidden" name="form-name" value="quote" />
-              <div hidden>
-                <input name="bot-field" {...register("bot-field")} />
-              </div>
+              <input type="hidden" name="bot-field" />
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
-                    {...register("name", { required: true })}
-                    className={errors.name ? "border-destructive" : ""}
+                    name="name"
+                    required
                   />
-                  {errors.name && (
-                    <p className="text-sm text-destructive">Name is required</p>
-                  )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
-                    {...register("email", { 
-                      required: true,
-                      pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-                    })}
-                    className={errors.email ? "border-destructive" : ""}
+                    required
                   />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">Valid email is required</p>
-                  )}
                 </div>
               </div>
 
@@ -124,17 +89,14 @@ const Quote = () => {
                   <Label htmlFor="company">Company</Label>
                   <Input
                     id="company"
-                    {...register("company", { required: true })}
-                    className={errors.company ? "border-destructive" : ""}
+                    name="company"
+                    required
                   />
-                  {errors.company && (
-                    <p className="text-sm text-destructive">Company is required</p>
-                  )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone (Optional)</Label>
-                  <Input id="phone" type="tel" {...register("phone")} />
+                  <Input id="phone" name="phone" type="tel" />
                 </div>
               </div>
 
@@ -142,21 +104,21 @@ const Quote = () => {
                 <Label htmlFor="products">Products Needed</Label>
                 <Textarea
                   id="products"
-                  {...register("products", { required: true })}
+                  name="products"
                   placeholder="Please list the products you need quotes for, including quantities and any specific requirements."
-                  className={`min-h-[150px] ${errors.products ? "border-destructive" : ""}`}
+                  className="min-h-[150px]"
+                  value={productValue}
+                  onChange={(e) => setProductValue(e.target.value)}
+                  required
                 />
-                {errors.products && (
-                  <p className="text-sm text-destructive">Product details are required</p>
-                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="timeline">Timeline (Optional)</Label>
                 <Input
                   id="timeline"
+                  name="timeline"
                   placeholder="When do you need these products?"
-                  {...register("timeline")}
                 />
               </div>
 
