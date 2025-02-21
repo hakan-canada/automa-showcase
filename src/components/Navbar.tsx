@@ -49,7 +49,7 @@ const Navbar = () => {
             <img 
               src="https://ykcgooinlzlhtonueasz.supabase.co/storage/v1/object/public/images//partssuppliedlogo.png"
               alt="PartsSupplied Logo"
-              className="h-16 w-auto" // Increased from h-12 to h-16
+              className="h-24 w-auto" // Increased from h-12 to h-16
             />
           </Link>
 
