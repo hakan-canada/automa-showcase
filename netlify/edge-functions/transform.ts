@@ -26,31 +26,28 @@ export default async (request: Request, context: Context) => {
 
     // Match product pages
     if (path.startsWith('/product/')) {
-      // Extract the product name from the HTML (h1 heading within ProductHeader)
-      const h1Match = page.match(/<h1[^>]*class="[^"]*font-bold[^"]*"[^>]*>(.*?)<\/h1>/);
-      const h1Text = h1Match ? h1Match[1].trim() : '';
+      const productSlug = path.split('/').pop();
+      // Extract the product name from the HTML (h1 heading)
+      const h1Match = page.match(/<h2[^>]*class="[^"]*font-medium[^"]*"[^>]*>(.*?)<\/h2>/);
+      const h1Text = h1Match ? h1Match[1] : productSlug;
 
-      // Extract product description from the paragraph with text-muted-foreground class
-      const descMatch = page.match(/<p[^>]*class="[^"]*text-muted-foreground[^"]*"[^>]*>(.*?)<\/p>/);
-      const productDesc = descMatch ? descMatch[1].trim() : '';
+      // Extract product description from meta tags
+      const descMatch = page.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/);
+      const productDesc = descMatch ? descMatch[1] : '';
 
-      // Extract product image from the img tag within the rounded-md class container
-      const imgMatch = page.match(/<img[^>]*class="[^"]*max-w-full[^"]*"[^>]*src="([^"]*)"[^>]*>/);
-      if (imgMatch && imgMatch[1]) {
-        ogImage = imgMatch[1];
-      }
+      // Extract product image from meta tags
+      const imgMatch = page.match(/<img[^>]*src="([^"]*)"[^>]*alt="[^"]*"/);
+      ogImage = imgMatch ? imgMatch[1] : ogImage;
 
-      if (h1Text) {
-        title = `Buy ${h1Text} | Parts Supplied`;
-        description = `Discover ${h1Text} online. ${productDesc}`;
-      }
+      title = `Buy ${h1Text} | Parts Supplied`;
+      description = `Discover ${h1Text} online. ${productDesc}`;
     }
     // Match category pages
     else if (path.startsWith('/category/')) {
       const categorySlug = path.split('/').pop();
       // Extract category name from h1
-      const h1Match = page.match(/<h1[^>]*class="[^"]*text-3xl[^"]*"[^>]*>(.*?)<\/h1>/);
-      const categoryName = h1Match ? h1Match[1].trim() : categorySlug;
+      const h1Match = page.match(/<h1[^>]*>(.*?)<\/h1>/);
+      const categoryName = h1Match ? h1Match[1] : categorySlug;
 
       title = `Shop ${categoryName} | Parts Supplied`;
       description = `Browse our selection of ${categoryName} products. We offer in stock items from top manufacturers with competitive pricing and fast shipping.`;
