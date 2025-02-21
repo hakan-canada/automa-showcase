@@ -19,6 +19,29 @@ const Quote = () => {
     }
   }, [productName]);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString(),
+      });
+
+      if (response.ok) {
+        // Handle successful form submission (e.g., show a thank-you message)
+        console.log("Form successfully submitted");
+      } else {
+        // Handle errors here
+        console.error("Form submission error");
+      }
+    } catch (error) {
+      console.error("Form submission error", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -54,8 +77,7 @@ const Quote = () => {
             <form
               name="quote"
               method="POST"
-              netlify="true"
-              netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
               className="space-y-6"
             >
               <input type="hidden" name="form-name" value="quote" />
@@ -134,3 +156,4 @@ const Quote = () => {
 };
 
 export default Quote;
+
