@@ -54,14 +54,14 @@ const Quote = () => {
             <form
               name="quote"
               method="POST"
-              data-netlify="true"
-              data-netlify-honeypot="bot-field"
-              action="/success"
+              netlify="true"
+              netlify-honeypot="bot-field"
               className="space-y-6"
             >
-              {/* Required Netlify fields */}
               <input type="hidden" name="form-name" value="quote" />
-              <input type="hidden" name="bot-field" />
+              <p className="hidden">
+                <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+              </p>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
