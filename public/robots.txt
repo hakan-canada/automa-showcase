@@ -1,6 +1,6 @@
-
 User-agent: *
 Allow: /
-
+Allow: /quote$
+Disallow: /quote?*
 # Sitemaps
 Sitemap: https://partssupplied.com/sitemap.xml
