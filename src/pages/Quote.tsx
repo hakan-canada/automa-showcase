@@ -8,11 +8,13 @@ import Navbar from "@/components/Navbar";
 import { FileText, Clock } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Footer from "@/components/Footer";
 
 const Quote = () => {
   const [searchParams] = useSearchParams();
   const productName = searchParams.get('product');
   const [productValue, setProductValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
@@ -20,6 +22,20 @@ const Quote = () => {
       setProductValue(productName);
     }
   }, [productName]);
+
+  // Check for success parameter in URL
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('success') === 'true') {
+      setIsSubmitted(true);
+    }
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    console.log("Quote form submission initiated");
+    setIsSubmitting(true);
+    // Let the form submit naturally - don't call preventDefault()
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -76,10 +92,8 @@ const Quote = () => {
                 method="POST"
                 data-netlify="true"
                 netlify-honeypot="bot-field"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setIsSubmitted(true);
-                }}
+                onSubmit={handleSubmit}
+                action="/quote?success=true"
                 className="space-y-6"
               >
                 <input type="hidden" name="form-name" value="quote" />
@@ -146,14 +160,15 @@ const Quote = () => {
                   />
                 </div>
 
-                <Button type="submit" className="w-full md:w-auto">
-                  Request Quote
+                <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Request Quote"}
                 </Button>
               </form>
             </Card>
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

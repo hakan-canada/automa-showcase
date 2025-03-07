@@ -8,12 +8,19 @@ import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { Phone, Mail, Clock } from "lucide-react";
 import Footer from "@/components/Footer";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const Contact = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = (data: any) => {
-    reset();
+    setIsSubmitting(true);
+    // Let the form submit naturally to Netlify
+    // We'll reset the form in componentDidMount
+    console.log("Form submitted:", data);
+    // We don't reset() here as we're letting Netlify handle the submission
   };
 
   return (
@@ -61,6 +68,7 @@ const Contact = () => {
               data-netlify-honeypot="bot-field"
               className="space-y-6"
               onSubmit={handleSubmit(onSubmit)}
+              action="/thank-you"
             >
               <input type="hidden" name="form-name" value="contact" />
               <p className="hidden">
@@ -119,8 +127,8 @@ const Contact = () => {
                 )}
               </div>
 
-              <Button type="submit" className="w-full md:w-auto">
-                Send Message
+              <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>
           </Card>

@@ -24,6 +24,19 @@
 [build.processing.html]
   pretty_urls = true
 
+# Enable form detection specifically
+[functions]
+  directory = "netlify/functions"
+  
+[dev]
+  command = "vite"
+  
+# Form success redirects
+[[redirects]]
+  from = "/thank-you"
+  to = "/index.html"
+  status = 200
+
 [[edge_functions]]
   path = "/*"
   function = "transform"
