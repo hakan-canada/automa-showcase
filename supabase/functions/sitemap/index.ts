@@ -35,41 +35,59 @@ async function generateSitemap() {
       .ele('priority').txt('0.8').up();
   });
 
-  // Paginate through all products to get all of them
-  const PAGE_SIZE = 1000;
-  let page = 0;
-  let hasMoreProducts = true;
+  // Count total products first
+  const { count, error: countError } = await supabase
+    .from('products')
+    .select('id', { count: 'exact', head: true });
 
-  while (hasMoreProducts) {
-    console.log(`Fetching products page ${page + 1}, offset: ${page * PAGE_SIZE}`);
+  if (countError) {
+    console.error('Error counting products:', countError);
+    return xml.end({ prettyPrint: true });
+  }
+
+  console.log(`Total products in database: ${count}`);
+
+  // Paginate through all products using a larger page size
+  const PAGE_SIZE = 2000; // Increased from 1000
+  const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
+  console.log(`Will fetch ${totalPages} pages with ${PAGE_SIZE} products per page`);
+
+  let productCount = 0;
+  
+  for (let page = 0; page < totalPages; page++) {
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    
+    console.log(`Fetching products page ${page + 1}/${totalPages}, range: ${from}-${to}`);
     
     const { data: products, error } = await supabase
       .from('products')
       .select('slug')
-      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      .range(from, to);
       
     if (error) {
-      console.error('Error fetching products:', error);
-      break;
+      console.error(`Error fetching products page ${page + 1}:`, error);
+      continue;
     }
     
     if (!products || products.length === 0) {
-      hasMoreProducts = false;
-    } else {
-      // Add product pages
-      products.forEach(product => {
-        xml.ele('url')
-          .ele('loc').txt(`${baseUrl}/product/${product.slug}`).up()
-          .ele('changefreq').txt('daily').up()
-          .ele('priority').txt('0.9').up();
-      });
-      
-      // Continue if we got a full page of results
-      hasMoreProducts = products.length === PAGE_SIZE;
-      page++;
+      console.log(`No products found on page ${page + 1}`);
+      continue;
     }
+
+    productCount += products.length;
+    console.log(`Adding ${products.length} products from page ${page + 1} to sitemap`);
+    
+    // Add product pages
+    products.forEach(product => {
+      xml.ele('url')
+        .ele('loc').txt(`${baseUrl}/product/${product.slug}`).up()
+        .ele('changefreq').txt('daily').up()
+        .ele('priority').txt('0.9').up();
+    });
   }
 
+  console.log(`Total products added to sitemap: ${productCount}`);
   return xml.end({ prettyPrint: true });
 }
 
