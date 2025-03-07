@@ -12,35 +12,13 @@ const Quote = () => {
   const [searchParams] = useSearchParams();
   const productName = searchParams.get('product');
   const [productValue, setProductValue] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     if (productName) {
       setProductValue(productName);
     }
   }, [productName]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-
-    try {
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString(),
-      });
-
-      if (response.ok) {
-        // Handle successful form submission (e.g., show a thank-you message)
-        console.log("Form successfully submitted");
-      } else {
-        // Handle errors here
-        console.error("Form submission error");
-      }
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,82 +51,91 @@ const Quote = () => {
             </Card>
           </div>
 
-          <Card className="p-8">
-            <form
-              name="quote"
-              method="POST"
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              <input type="hidden" name="form-name" value="quote" />
-              <p className="hidden">
-                <label>Don't fill this out if you're human: <input name="bot-field" /></label>
-              </p>
+          {isSubmitted ? (
+            <Card className="p-8 text-center">
+              <h2 className="text-2xl font-bold mb-4">Thank You!</h2>
+              <p className="text-lg">Your quote request has been submitted successfully. We'll get back to you within one business day.</p>
+            </Card>
+          ) : (
+            <Card className="p-8">
+              <form
+                name="quote"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={() => setIsSubmitted(true)}
+                className="space-y-6"
+              >
+                <input type="hidden" name="form-name" value="quote" />
+                <p className="hidden">
+                  <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                </p>
 
-              <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="company">Company</Label>
+                    <Input
+                      id="company"
+                      name="company"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone (Optional)</Label>
+                    <Input id="phone" name="phone" type="tel" />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
+                  <Label htmlFor="products">Products Needed</Label>
+                  <Textarea
+                    id="products"
+                    name="products"
+                    placeholder="Please list the products you need quotes for, including quantities and any specific requirements."
+                    className="min-h-[150px]"
+                    value={productValue}
+                    onChange={(e) => setProductValue(e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="timeline">Timeline (Optional)</Label>
                   <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="company">Company</Label>
-                  <Input
-                    id="company"
-                    name="company"
-                    required
+                    id="timeline"
+                    name="timeline"
+                    placeholder="When do you need these products?"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone (Optional)</Label>
-                  <Input id="phone" name="phone" type="tel" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="products">Products Needed</Label>
-                <Textarea
-                  id="products"
-                  name="products"
-                  placeholder="Please list the products you need quotes for, including quantities and any specific requirements."
-                  className="min-h-[150px]"
-                  value={productValue}
-                  onChange={(e) => setProductValue(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="timeline">Timeline (Optional)</Label>
-                <Input
-                  id="timeline"
-                  name="timeline"
-                  placeholder="When do you need these products?"
-                />
-              </div>
-
-              <Button type="submit" className="w-full md:w-auto">
-                Request Quote
-              </Button>
-            </form>
-          </Card>
+                <Button type="submit" className="w-full md:w-auto">
+                  Request Quote
+                </Button>
+              </form>
+            </Card>
+          )}
         </div>
       </main>
     </div>
@@ -156,4 +143,3 @@ const Quote = () => {
 };
 
 export default Quote;
-
