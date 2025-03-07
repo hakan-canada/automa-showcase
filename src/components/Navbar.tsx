@@ -90,7 +90,7 @@ const Navbar = () => {
               
               {/* Mobile brands dropdown */}
               <div className="relative">
-                <button onClick={toggleMobileBrands} className="flex items-center justify-between w-full py-2 hover:text-primary transition-colors px-[95px]">
+                <button onClick={toggleMobileBrands} className="flex items-center justify-between w-full py-2 hover:text-primary transition-colors px-[99px]">
                   Brands
                   <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${mobileShowBrands ? 'rotate-180' : ''}`} />
                 </button>
