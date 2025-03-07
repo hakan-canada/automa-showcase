@@ -10,7 +10,6 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
@@ -18,8 +17,10 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileShowBrands, setMobileShowBrands] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMobileBrands = () => setMobileShowBrands(!mobileShowBrands);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,12 +143,36 @@ const Navbar = () => {
               >
                 Categories
               </Link>
-              <Link
-                to="/brands"
-                className="hover:text-primary transition-colors py-2"
-              >
-                Brands
-              </Link>
+              
+              {/* Mobile brands dropdown */}
+              <div className="relative">
+                <button 
+                  onClick={toggleMobileBrands}
+                  className="flex items-center justify-between w-full py-2 hover:text-primary transition-colors"
+                >
+                  Brands
+                  <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${mobileShowBrands ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {mobileShowBrands && brands && (
+                  <div className="bg-background border rounded-md mt-1 py-2 shadow-md">
+                    {brands.map((brand) => (
+                      <Link
+                        key={brand.id}
+                        to={`/brand/${brand.slug}`}
+                        className="block px-4 py-2 hover:bg-accent hover:text-accent-foreground"
+                        onClick={() => {
+                          setMobileShowBrands(false);
+                          setIsOpen(false);
+                        }}
+                      >
+                        {brand.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
               <Link
                 to="/quote"
                 className="hover:text-primary transition-colors py-2"
