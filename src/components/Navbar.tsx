@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useQuery } from '@tanstack/react-query';
@@ -10,6 +10,7 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
@@ -84,17 +85,13 @@ const Navbar = () => {
                   <NavigationMenuContent>
                     <div className="w-[200px] p-2">
                       {brands?.map((brand) => (
-                        <NavigationMenuLink
+                        <Link
                           key={brand.id}
-                          asChild
+                          to={`/brand/${brand.slug}`}
+                          className="block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
-                          <Link
-                            to={`/brand/${brand.slug}`}
-                            className="block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            {brand.name}
-                          </Link>
-                        </NavigationMenuLink>
+                          {brand.name}
+                        </Link>
                       ))}
                     </div>
                   </NavigationMenuContent>
