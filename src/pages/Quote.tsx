@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,18 @@ const Quote = () => {
             </Card>
           </div>
 
+          {/* Hidden form fields for Netlify */}
+          <div hidden>
+            <form name="quote" data-netlify="true" netlify-honeypot="bot-field">
+              <input type="text" name="name" />
+              <input type="email" name="email" />
+              <input type="text" name="company" />
+              <input type="tel" name="phone" />
+              <textarea name="products"></textarea>
+              <input type="text" name="timeline" />
+            </form>
+          </div>
+
           {isSubmitted ? (
             <Card className="p-8 text-center">
               <h2 className="text-2xl font-bold mb-4">Thank You!</h2>
@@ -63,7 +76,10 @@ const Quote = () => {
                 method="POST"
                 data-netlify="true"
                 netlify-honeypot="bot-field"
-                onSubmit={() => setIsSubmitted(true)}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setIsSubmitted(true);
+                }}
                 className="space-y-6"
               >
                 <input type="hidden" name="form-name" value="quote" />

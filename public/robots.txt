@@ -1,6 +1,8 @@
+
 User-agent: *
 Allow: /
 Allow: /quote$
 Disallow: /quote?*
+Disallow: /form-detection.html
 # Sitemaps
 Sitemap: https://partssupplied.com/sitemap.xml

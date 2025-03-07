@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netlify Form Detection</title>
+</head>
+<body>
+  <!-- Contact Form -->
+  <form name="contact" netlify netlify-honeypot="bot-field">
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <input type="text" name="company" />
+    <textarea name="message"></textarea>
+    <button type="submit">Send</button>
+  </form>
+
+  <!-- Quote Form -->
+  <form name="quote" netlify netlify-honeypot="bot-field">
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <input type="text" name="company" />
+    <input type="tel" name="phone" />
+    <textarea name="products"></textarea>
+    <input type="text" name="timeline" />
+    <button type="submit">Request Quote</button>
+  </form>
+</body>
+</html>

@@ -13,10 +13,16 @@
 [build]
   command = "vite build && node scripts/generateSitemap.js"
   publish = "dist"
-
+  
 [build.environment]
   NODE_VERSION = "20"
   NETLIFY_EXPERIMENTAL_FEATURES_OPT_IN = "prerender"
+
+[build.processing]
+  skip_processing = false
+  
+[build.processing.html]
+  pretty_urls = true
 
 [[edge_functions]]
   path = "/*"

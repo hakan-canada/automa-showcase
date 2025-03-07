@@ -44,13 +44,15 @@ const Contact = () => {
           </div>
 
           <Card className="p-8">
-            {/* Hidden form for Netlify detection */}
-            <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-              <input type="text" name="name" />
-              <input type="email" name="email" />
-              <input type="text" name="company" />
-              <textarea name="message"></textarea>
-            </form>
+            {/* Hidden form fields for Netlify */}
+            <div hidden>
+              <form name="contact" data-netlify="true" netlify-honeypot="bot-field">
+                <input type="text" name="name" />
+                <input type="email" name="email" />
+                <input type="text" name="company" />
+                <textarea name="message"></textarea>
+              </form>
+            </div>
 
             <form 
               name="contact"
