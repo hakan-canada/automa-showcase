@@ -10,16 +10,7 @@ async function generateSitemap() {
   const supabase = createClient(supabaseUrl, supabaseKey);
   const baseUrl = 'https://partssupplied.com';
 
-  // Fetch all products
-  const { data: products } = await supabase
-    .from('products')
-    .select('slug');
-
-  // Fetch all categories
-  const { data: categories } = await supabase
-    .from('categories')
-    .select('slug');
-
+  // Create XML sitemap
   const xml = create({ version: '1.0', encoding: 'UTF-8' })
     .ele('urlset', { xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' });
 
@@ -31,13 +22,10 @@ async function generateSitemap() {
       .ele('priority').txt(path === '' ? '1.0' : '0.8').up();
   });
 
-  // Add product pages
-  products?.forEach(product => {
-    xml.ele('url')
-      .ele('loc').txt(`${baseUrl}/product/${product.slug}`).up()
-      .ele('changefreq').txt('daily').up()
-      .ele('priority').txt('0.9').up();
-  });
+  // Fetch all categories
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('slug');
 
   // Add category pages
   categories?.forEach(category => {
@@ -46,6 +34,41 @@ async function generateSitemap() {
       .ele('changefreq').txt('daily').up()
       .ele('priority').txt('0.8').up();
   });
+
+  // Paginate through all products to get all of them
+  const PAGE_SIZE = 1000;
+  let page = 0;
+  let hasMoreProducts = true;
+
+  while (hasMoreProducts) {
+    console.log(`Fetching products page ${page + 1}, offset: ${page * PAGE_SIZE}`);
+    
+    const { data: products, error } = await supabase
+      .from('products')
+      .select('slug')
+      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+      
+    if (error) {
+      console.error('Error fetching products:', error);
+      break;
+    }
+    
+    if (!products || products.length === 0) {
+      hasMoreProducts = false;
+    } else {
+      // Add product pages
+      products.forEach(product => {
+        xml.ele('url')
+          .ele('loc').txt(`${baseUrl}/product/${product.slug}`).up()
+          .ele('changefreq').txt('daily').up()
+          .ele('priority').txt('0.9').up();
+      });
+      
+      // Continue if we got a full page of results
+      hasMoreProducts = products.length === PAGE_SIZE;
+      page++;
+    }
+  }
 
   return xml.end({ prettyPrint: true });
 }
@@ -63,15 +86,12 @@ Deno.serve(async (req) => {
   try {
     const sitemap = await generateSitemap();
     
-    return new Response(
-      JSON.stringify({ sitemap }), 
-      {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        }
+    return new Response(sitemap, {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/xml',
       }
-    );
+    });
   } catch (error) {
     console.error('Error generating sitemap:', error);
     return new Response(
