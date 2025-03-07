@@ -35,7 +35,7 @@ async function generateSitemap() {
       .ele('priority').txt('0.8').up();
   });
 
-  // Count total products first
+  // Count total products first for logging purposes
   const { count, error: countError } = await supabase
     .from('products')
     .select('id', { count: 'exact', head: true });
@@ -47,47 +47,58 @@ async function generateSitemap() {
 
   console.log(`Total products in database: ${count}`);
 
-  // Paginate through all products using a larger page size
-  const PAGE_SIZE = 2000; // Increased from 1000
-  const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
-  console.log(`Will fetch ${totalPages} pages with ${PAGE_SIZE} products per page`);
-
+  // Use cursor-based pagination to fetch all products
+  const PAGE_SIZE = 1000; // More conservative page size
+  let lastId = 0;
   let productCount = 0;
-  
-  for (let page = 0; page < totalPages; page++) {
-    const from = page * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
-    
-    console.log(`Fetching products page ${page + 1}/${totalPages}, range: ${from}-${to}`);
+  let batchNumber = 0;
+  let hasMoreProducts = true;
+
+  while (hasMoreProducts) {
+    batchNumber++;
+    console.log(`Fetching batch ${batchNumber}, products after ID ${lastId}`);
     
     const { data: products, error } = await supabase
       .from('products')
-      .select('slug')
-      .range(from, to);
+      .select('id, slug')
+      .gt('id', lastId)
+      .order('id', { ascending: true })
+      .limit(PAGE_SIZE);
       
     if (error) {
-      console.error(`Error fetching products page ${page + 1}:`, error);
-      continue;
+      console.error(`Error fetching products batch ${batchNumber}:`, error);
+      break;
     }
     
     if (!products || products.length === 0) {
-      console.log(`No products found on page ${page + 1}`);
+      console.log(`No more products found after ID ${lastId}`);
+      hasMoreProducts = false;
       continue;
     }
 
-    productCount += products.length;
-    console.log(`Adding ${products.length} products from page ${page + 1} to sitemap`);
+    const batchSize = products.length;
+    productCount += batchSize;
+    console.log(`Processing batch ${batchNumber}: ${batchSize} products (total so far: ${productCount}/${count})`);
     
-    // Add product pages
+    // Update lastId for next iteration
+    lastId = products[products.length - 1].id;
+    
+    // Add product pages to sitemap
     products.forEach(product => {
       xml.ele('url')
         .ele('loc').txt(`${baseUrl}/product/${product.slug}`).up()
         .ele('changefreq').txt('daily').up()
         .ele('priority').txt('0.9').up();
     });
+    
+    // Check if we got fewer products than requested, which means we've reached the end
+    if (batchSize < PAGE_SIZE) {
+      console.log(`Received ${batchSize} products (less than page size ${PAGE_SIZE}), finishing`);
+      hasMoreProducts = false;
+    }
   }
 
-  console.log(`Total products added to sitemap: ${productCount}`);
+  console.log(`Completed sitemap generation. Total products added: ${productCount}`);
   return xml.end({ prettyPrint: true });
 }
 
@@ -102,7 +113,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    console.log("Starting sitemap generation...");
+    const startTime = Date.now();
     const sitemap = await generateSitemap();
+    const endTime = Date.now();
+    console.log(`Sitemap generation completed in ${(endTime - startTime) / 1000} seconds`);
     
     return new Response(sitemap, {
       headers: {
